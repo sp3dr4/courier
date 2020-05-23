@@ -1,6 +1,5 @@
 const { attributes } = require('structure');
 const ULID = require('ulid');
-
 const DeviceInfo = require('./deviceInfo');
 
 const Message = attributes({
@@ -13,13 +12,13 @@ const Message = attributes({
     nullable: true,
     default: (instance) => Date.now()
   },
-  from: {
+  accountType: {
     type: String,
     required: true,
     equal: ['customer', 'operator']
   },
   accountId: String,
-  message: String,
+  content: String,
   deviceInfo: {
     type: DeviceInfo,
     default: (instance) => DeviceInfo()
@@ -28,6 +27,6 @@ const Message = attributes({
     type: String,
     nullable: true
   }
-})(class DeviceInfo {});
+})(class Message {});
 
 module.exports = Message;

@@ -1,12 +1,13 @@
 const reqlib = require('app-root-path').require;
 const express = require('express');
+
 const { validate } = reqlib('src/adapters/webserver/utils');
 
 const schema = {
   type: 'object',
-  required: ['message'],
+  required: ['content'],
   properties: {
-    message: {
+    content: {
       type: 'string',
       minLength: 1
     },
@@ -24,23 +25,22 @@ const schema = {
     },
   },
   oneOf: [
-    {required: ['customerId']},
-    {required: ['operatorId']},
+    { required: ['customerId'] },
+    { required: ['operatorId'] },
   ]
-}
+};
 
 module.exports = (logger, controller) => {
   const router = express.Router();
 
-  router.post('/', validate({body: schema}), async (req, res, next) => {
-    logger.info('Calling createMessage controller');
+  router.post('/', validate({ body: schema }), async (req, res, next) => {
     try {
       const result = await controller.createMessage(req.body, req.headers.os, req.headers.appversion);
       return res.status(201).json(result.toJSON());
     } catch (error) {
-      next(error);
+      return next(error);
     }
   });
 
   return router;
-}
+};

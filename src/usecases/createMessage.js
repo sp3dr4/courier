@@ -6,7 +6,7 @@ const snooze = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const create = (logger, MessageRepository) => {
 
-  async function Execute({ customerId, operatorId, message, responseTo, os, appVersion }) {
+  async function Execute({ customerId, operatorId, content, responseTo, os, appVersion }) {
 
     if (customerId && operatorId) {
       throw new Error('customerId or operatorId must be null');
@@ -19,9 +19,9 @@ const create = (logger, MessageRepository) => {
     // check that message with uid responseTo has no response
 
     const msg = new Message({
-      from: isOperator ? 'operator' : 'customer',
+      accountType: isOperator ? 'operator' : 'customer',
       accountId: isOperator ? operatorId : customerId,
-      message,
+      content,
       deviceInfo: new DeviceInfo({ os, appVersion }),
       previous: responseTo
     });
