@@ -1,7 +1,7 @@
 const { attributes } = require('structure');
 
 const DeviceInfo = attributes({
-  OS: {
+  os: {
     type: String,
     nullable: true
   },

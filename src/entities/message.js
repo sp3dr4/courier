@@ -1,7 +1,7 @@
 const { attributes } = require('structure');
 const ULID = require('ulid');
 
-const DeviceInfo = require('./DeviceInfo');
+const DeviceInfo = require('./deviceInfo');
 
 const Message = attributes({
   uid: {

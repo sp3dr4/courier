@@ -2,17 +2,17 @@ const CreateMessage = require('../usecases/createMessage');
 
 const controller = (logger) => {
 
-  const createMessage = async () => {
+  const createMessage = async ({ customerId, operatorId, message, responseTo }, os, appVersion) => {
     const CreateMessageUseCase = CreateMessage(logger, null); // missing repo
     const req = {
-      customerId: null,
-      OperatorId: null,
-      message: null,
-      os: null,
-      appVersion: null,
-      responseTo: null
+      customerId,
+      operatorId,
+      message,
+      responseTo,
+      os,
+      appVersion,
     };
-    logger.debug(`running createMessage usecase with req: ${req}`);
+    logger.debug(`running createMessage usecase with req: ${JSON.stringify(req)}`);
     const result = await CreateMessageUseCase.Execute(req);
     return result;
   };

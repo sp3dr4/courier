@@ -6,12 +6,12 @@ const snooze = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const create = (logger, MessageRepository) => {
 
-  async function Execute({ customerId, OperatorId, message, os, appVersion, responseTo }) {
+  async function Execute({ customerId, operatorId, message, responseTo, os, appVersion }) {
 
-    if (customerId && OperatorId) {
-      throw new Error('customerId or OperatorId must be null');
+    if (customerId && operatorId) {
+      throw new Error('customerId or operatorId must be null');
     }
-    const isOperator = !!OperatorId;
+    const isOperator = !!operatorId;
 
     logger.info('Checking previous message validity');
     await snooze(1000);
@@ -20,9 +20,9 @@ const create = (logger, MessageRepository) => {
 
     const msg = new Message({
       from: isOperator ? 'operator' : 'customer',
-      accountId: isOperator ? OperatorId : customerId,
+      accountId: isOperator ? operatorId : customerId,
       message,
-      deviceInfo: new DeviceInfo({ OS: os, appVersion }),
+      deviceInfo: new DeviceInfo({ os, appVersion }),
       previous: responseTo
     });
     logger.info(`Message saved: ${JSON.stringify(msg)}`);
