@@ -1,10 +1,7 @@
 const DeviceInfo = require('../entities/deviceInfo');
 const Message = require('../entities/message');
 
-// just as test to await something
-const snooze = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const create = (logger, MessageRepository) => {
+const create = (logger, messageRepository) => {
 
   async function Execute({ customerId, operatorId, content, responseTo, os, appVersion }) {
 
@@ -13,11 +10,6 @@ const create = (logger, MessageRepository) => {
     }
     const isOperator = !!operatorId;
 
-    logger.info('Checking previous message validity');
-    await snooze(1000);
-    // check that message with uid responseTo exists
-    // check that message with uid responseTo has no response
-
     const msg = new Message({
       accountType: isOperator ? 'operator' : 'customer',
       accountId: isOperator ? operatorId : customerId,
@@ -25,8 +17,11 @@ const create = (logger, MessageRepository) => {
       deviceInfo: new DeviceInfo({ os, appVersion }),
       previous: responseTo
     });
-    logger.info(`Message saved: ${JSON.stringify(msg)}`);
-    return msg;
+    logger.debug(`Saving message: ${JSON.stringify(msg)}`);
+
+    const savedMsg = await messageRepository.save(msg);
+    logger.info(`Message saved: ${JSON.stringify(savedMsg)}`);
+    return savedMsg;
   }
 
   return {

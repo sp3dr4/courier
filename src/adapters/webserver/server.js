@@ -3,18 +3,21 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const { ValidationError } = require('express-json-validator-middleware');
-const pjson = reqlib('./package.json');
-const MessagesRouter = require('./messages');
 
-const start = (logger, port) => {
+const pjson = reqlib('package.json');
+const MessagesRouter = reqlib('src/adapters/webserver/messages');
+const Controller = reqlib('src/controllers');
+
+const start = (logger, config) => {
   const app = express();
+  const controller = Controller(logger, config);
 
   // bodyparser
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   // request logger
   app.use(morgan('tiny'));
-  
+
   // Healthcheck
   app.get('/healthcheck', (req, res) => {
     res.status(200).send({
@@ -23,7 +26,8 @@ const start = (logger, port) => {
     });
   });
 
-  app.use(MessagesRouter(logger));
+  // Routers
+  app.use('/api', MessagesRouter(logger, controller));
 
   // 400 validation error handler
   app.use((err, req, res, next) => {
@@ -53,9 +57,10 @@ const start = (logger, port) => {
     res.status(err.statusCode).send({
       statusCode: err.statusCode,
       message: err.message
-    })
+    });
   });
-  
+
+  const { port } = config.adapters.webserver;
   app.listen(port, () => {
     logger.info(`Listening on PORT: ${port}`);
   });

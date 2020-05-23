@@ -1,9 +1,14 @@
-const CreateMessage = require('../usecases/createMessage');
+const reqlib = require('app-root-path').require;
 
-const controller = (logger) => {
+const MessageRepository = reqlib('src/adapters/database/messageRepository');
+const CreateMessage = reqlib('src/usecases/createMessage');
+
+const controller = (logger, config) => {
+
+  const repo = MessageRepository(logger, config.adapters.database);
 
   const createMessage = async ({ customerId, operatorId, content, responseTo }, os, appVersion) => {
-    const CreateMessageUseCase = CreateMessage(logger, null); // missing repo
+    const CreateMessageUseCase = CreateMessage(logger, repo);
     const req = {
       customerId,
       operatorId,

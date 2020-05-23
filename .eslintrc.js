@@ -1,15 +1,16 @@
 module.exports = {
-  "extends": "airbnb-base",
+  'extends': 'airbnb-base',
   rules: {
-      "linebreak-style": 0,
-      "comma-dangle": 0,
-      "arrow-body-style": ["error", "as-needed"],
-      "padded-blocks": 0,
-      "indent": ["error", 2],
-      "max-len": 0,
-      "no-unused-vars": 0,
-      "no-console": 0,
-      "radix": 0,
-      "class-methods-use-this": [0]
+    'linebreak-style': 0,
+    'comma-dangle': 0,
+    'arrow-body-style': ['error', 'as-needed'],
+    'padded-blocks': 0,
+    'indent': ['error', 2],
+    'max-len': 0,
+    'no-unused-vars': 0,
+    'no-console': 0,
+    'radix': 0,
+    'class-methods-use-this': [0],
+    'object-curly-newline': 0
   }
 };
