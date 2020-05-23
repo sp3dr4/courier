@@ -1,7 +1,9 @@
+const reqlib = require('app-root-path').require;
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const pjson = require('../../../package.json');
+const pjson = reqlib('./package.json');
+const MessagesRouter = require('./messages');
 
 const start = (logger, port) => {
   const app = express();
@@ -19,6 +21,8 @@ const start = (logger, port) => {
       version: pjson.version
     });
   });
+
+  app.use(MessagesRouter(logger));
   
   // Generic error handler
   app.use((err, req, res, next) => {
