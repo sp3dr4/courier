@@ -36,7 +36,7 @@ module.exports = (logger, controller) => {
   router.post('/', validate({ body: schema }), async (req, res, next) => {
     try {
       const result = await controller.createMessage(req.body, req.headers.os, req.headers.appversion);
-      return res.status(201).json(result.toJSON());
+      return res.status(201).json(result);
     } catch (error) {
       return next(error);
     }

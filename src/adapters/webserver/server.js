@@ -6,6 +6,7 @@ const { ValidationError } = require('express-json-validator-middleware');
 
 const pjson = reqlib('package.json');
 const MessagesRouter = reqlib('src/adapters/webserver/messages');
+const ThreadsRouter = reqlib('src/adapters/webserver/threads');
 const Controller = reqlib('src/controllers');
 
 const start = (logger, config) => {
@@ -28,6 +29,7 @@ const start = (logger, config) => {
 
   // Routers
   app.use('/api', MessagesRouter(logger, controller));
+  app.use('/api', ThreadsRouter(logger, controller));
 
   // 400 validation error handler
   app.use((err, req, res, next) => {

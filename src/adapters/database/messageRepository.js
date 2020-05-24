@@ -3,6 +3,16 @@ const { Client } = require('pg');
 
 const Message = reqlib('src/entities/message');
 
+const deserializeMessage = (msg) => new Message({
+  uid: msg.uid,
+  created: msg.created,
+  accountType: msg.account_type,
+  accountId: msg.account_id,
+  content: msg.content,
+  deviceInfo: msg.device_info,
+  previous: msg.previous_uid
+});
+
 const repo = (logger, databaseConfig) => {
 
   async function getClient() {
@@ -48,20 +58,25 @@ const repo = (logger, databaseConfig) => {
     if (!res.rows.length) {
       throw new Error(`Invalid previous message uid ${msg.previous}`);
     }
-    const row = res.rows[0];
-    return new Message({
-      uid: row.uid,
-      created: row.created,
-      accountType: row.account_type,
-      accountId: row.account_id,
-      content: row.content,
-      deviceInfo: row.device_info,
-      previous: row.previous_uid
-    });
+    return deserializeMessage(res.rows[0]);
+  };
+
+  const listThreads = async () => {
+    const client = await getClient();
+
+    const query = `
+      SELECT get_messages_thread(uid) AS thread
+      FROM messages
+      WHERE previous_uid IS NULL
+      ORDER BY created;
+    `;
+    const res = await client.query(query);
+    return res.rows.map((t) => t.thread.map((msg) => deserializeMessage(msg)));
   };
 
   return {
-    save
+    save,
+    listThreads
   };
 };
 
