@@ -11,3 +11,13 @@ services:
     volumes:
       - .compose/postgres:/var/lib/postgresql/data
       - ./db_init.sql:/docker-entrypoint-initdb.d/db_init.sql
+
+  app:
+    image: courier
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_HOST: postgres
+    ports:
+      - "8080:8080"
