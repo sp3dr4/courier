@@ -61,6 +61,17 @@ const repo = (logger, databaseConfig) => {
     return deserializeMessage(res.rows[0]);
   };
 
+  const listMessages = async () => {
+    const client = await getClient();
+    const query = `
+      SELECT *
+      FROM messages
+      ORDER BY uid;
+    `;
+    const res = await client.query(query);
+    return res.rows.map((m) => deserializeMessage(m));
+  };
+
   const listThreads = async () => {
     const client = await getClient();
 
@@ -76,6 +87,7 @@ const repo = (logger, databaseConfig) => {
 
   return {
     save,
+    listMessages,
     listThreads
   };
 };

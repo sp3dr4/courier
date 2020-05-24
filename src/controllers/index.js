@@ -2,6 +2,7 @@ const reqlib = require('app-root-path').require;
 
 const MessageRepository = reqlib('src/adapters/database/messageRepository');
 const CreateMessage = reqlib('src/usecases/createMessage');
+const ListMessages = reqlib('src/usecases/listMessages');
 const ListThreads = reqlib('src/usecases/listThreads');
 
 const controller = (logger, config) => {
@@ -24,6 +25,14 @@ const controller = (logger, config) => {
     return result;
   };
 
+  const listMessages = async () => {
+    const ListMessagesUseCase = ListMessages(logger, repo);
+    const req = {};
+    logger.debug(`running ListMessages usecase with req: ${JSON.stringify(req)}`);
+    const result = await ListMessagesUseCase.Execute(req);
+    return result;
+  };
+
   const listThreads = async () => {
     const ListThreadsUseCase = ListThreads(logger, repo);
     const req = {};
@@ -34,6 +43,7 @@ const controller = (logger, config) => {
 
   return {
     createMessage,
+    listMessages,
     listThreads
   };
 
