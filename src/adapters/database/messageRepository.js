@@ -54,21 +54,27 @@ const repo = (logger, databaseConfig) => {
     ];
     await client.query(query, params);
 
-    const res = await client.query('SELECT * FROM messages WHERE uid = $1', [msg.uid]);
+    const res = await client.query('SELECT * FROM messages WHERE uid = $1;', [msg.uid]);
     if (!res.rows.length) {
       throw new Error(`Invalid previous message uid ${msg.previous}`);
     }
     return deserializeMessage(res.rows[0]);
   };
 
-  const listMessages = async () => {
+  const listMessages = async ({ os, appVersion, language }) => {
     const client = await getClient();
     const query = `
       SELECT *
       FROM messages
+      WHERE
+        ($1::VARCHAR IS NULL OR device_info->>'os' ILIKE '%' || $1 || '%')
+        AND ($2::VARCHAR IS NULL OR device_info->>'appVersion' ILIKE '%' || $2 || '%')
+        AND ($3::VARCHAR IS NULL OR device_info->>'language' ILIKE '%' || $3 || '%')
       ORDER BY uid;
     `;
-    const res = await client.query(query);
+    const params = [os, appVersion, language];
+    logger.debug(`Listing messages filtering with: ${params}`);
+    const res = await client.query(query, params);
     return res.rows.map((m) => deserializeMessage(m));
   };
 

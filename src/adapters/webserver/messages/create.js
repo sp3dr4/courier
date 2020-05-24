@@ -3,7 +3,7 @@ const express = require('express');
 
 const { validate } = reqlib('src/adapters/webserver/utils');
 
-const schema = {
+const bodySchema = {
   type: 'object',
   required: ['content'],
   properties: {
@@ -33,7 +33,7 @@ const schema = {
 module.exports = (logger, controller) => {
   const router = express.Router();
 
-  router.post('/', validate({ body: schema }), async (req, res, next) => {
+  router.post('/', validate({ body: bodySchema }), async (req, res, next) => {
     try {
       const result = await controller.createMessage(req.body, req.headers.os, req.headers.appversion, req.headers.language);
       return res.status(201).json(result);

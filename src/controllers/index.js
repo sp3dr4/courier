@@ -25,9 +25,9 @@ const controller = (logger, config) => {
     return result;
   };
 
-  const listMessages = async () => {
+  const listMessages = async (params) => {
     const ListMessagesUseCase = ListMessages(logger, repo);
-    const req = {};
+    const req = { ...params };
     logger.debug(`running ListMessages usecase with req: ${JSON.stringify(req)}`);
     const result = await ListMessagesUseCase.Execute(req);
     return result;
