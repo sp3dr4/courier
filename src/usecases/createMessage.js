@@ -3,7 +3,7 @@ const Message = require('../entities/message');
 
 const create = (logger, messageRepository) => {
 
-  async function Execute({ customerId, operatorId, content, responseTo, os, appVersion }) {
+  async function Execute({ customerId, operatorId, content, responseTo, os, appVersion, language }) {
 
     if (customerId && operatorId) {
       throw new Error('customerId or operatorId must be null');
@@ -14,7 +14,7 @@ const create = (logger, messageRepository) => {
       accountType: isOperator ? 'operator' : 'customer',
       accountId: isOperator ? operatorId : customerId,
       content,
-      deviceInfo: new DeviceInfo({ os, appVersion }),
+      deviceInfo: new DeviceInfo({ os, appVersion, language }),
       previous: responseTo
     });
     logger.debug(`Saving message: ${JSON.stringify(msg)}`);

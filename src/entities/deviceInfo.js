@@ -8,6 +8,10 @@ const DeviceInfo = attributes({
   appVersion: {
     type: String,
     nullable: true
+  },
+  language: {
+    type: String,
+    nullable: true
   }
 })(class DeviceInfo {});
 

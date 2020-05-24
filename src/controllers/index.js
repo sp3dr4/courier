@@ -8,7 +8,7 @@ const controller = (logger, config) => {
 
   const repo = MessageRepository(logger, config.adapters.database);
 
-  const createMessage = async ({ customerId, operatorId, content, responseTo }, os, appVersion) => {
+  const createMessage = async ({ customerId, operatorId, content, responseTo }, os, appVersion, language) => {
     const CreateMessageUseCase = CreateMessage(logger, repo);
     const req = {
       customerId,
@@ -17,6 +17,7 @@ const controller = (logger, config) => {
       responseTo,
       os,
       appVersion,
+      language
     };
     logger.debug(`running createMessage usecase with req: ${JSON.stringify(req)}`);
     const result = await CreateMessageUseCase.Execute(req);
